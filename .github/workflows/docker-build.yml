@@ -1,19 +1,48 @@
+name: Build and Push Docker Image
 
-name: My First Workflows
 on:
   push:
     branches:
       - master
 
 jobs:
-  hello:
-
+  docker:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Print Message
-        run: echo "Hello from GitHub Actions"
+      - name: Docker Build
+        run: docker build -t wordpress-app:${{ github.run_number }} .
+
+      - name: Docker Run
+        run: |
+          docker run -d \
+          --name container1 \
+          -p 8085:80 \
+          wordpress-app:${{ github.run_number }}
+
+      - name: Wait for Container
+        run: sleep 20
+
+      - name: Check Running Containers
+        run: docker ps
+
+      - name: Test Application
+        run: curl -I http://localhost:8085
+
+      - name: Docker Hub Login
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | \
+          docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Tag Image
+        run: |
+          docker tag wordpress-app:${{ github.run_number }} \
+          ${{ secrets.DOCKER_USERNAME }}/wordpress-app:${{ github.run_number }}
+
+      - name: Push Image
+        run: |
+          docker push \
+          ${{ secrets.DOCKER_USERNAME }}/wordpress-app:${{ github.run_number }}
