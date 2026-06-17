@@ -8,6 +8,6 @@ RUN apt-get update && \
     net-tools && \
     rm -rf /var/lib/apt/lists/*
 
-COPY wordpress/ /var/www/html/
+COPY .  /var/www/html/
 
 EXPOSE 80
