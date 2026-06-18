@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: wordpress-app
+      MYSQL_DATABASE: wordpress1
       MYSQL_USER: wp-user1
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
@@ -21,7 +21,7 @@ services:
       - mysql
     environment:
       WORDPRESS_DB_HOST: mysql:3306
-      WORDPRESS_DB_NAME: wordpress-app
+      WORDPRESS_DB_NAME: wordpress1
       WORDPRESS_DB_USER: wp-user1
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
     ports:
